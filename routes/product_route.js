@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { addproduct,getproduct,getproductbycategory,getproductbyid,deleteproduct,updateproduct ,getallproduct} = require("../controllers/products_controller");
 const { upload } = require("../config/cloudinary");
-
+//products
 router.post("/addproduct", upload.single("product_img"), addproduct);
 router.post("/getproduct",getproduct);
 

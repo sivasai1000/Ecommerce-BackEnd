@@ -68,7 +68,46 @@ const getproduct = async (req, res) => {
         });
     }
 };
+const getallproduct = async (req, res) => {
+    try {
+        const { user_id } = req.body;
+        if (!user_id) {
+            return res.status(400).json({
+                status: "failed",
+                message: "user_id is required",
+            });
+        }
 
+        const [result] = await pool.query(
+            `SELECT p.*, c.category_name 
+             FROM ecommerceproducts p
+             JOIN categories c ON p.category_id = c.category_id
+             `,
+            
+        );
+
+        if (result.length > 0) {
+            return res.status(200).json({
+                status: "success",
+                message: "all products retrieved successfully",
+                user_id: user_id,
+                data: result,
+            });
+        } else {
+            return res.status(400).json({
+                status: "failed",
+                message: "No products found for this user_id",
+            });
+        }
+
+    } catch (e) {
+        console.error("auth error is", e.message);
+        return res.status(500).json({
+            status: "failed",
+            message: "something went wrong",
+        });
+    }
+};
 const getproductbycategory = async(req,res)=>{
     try{
     let {category_id}=req.params;
@@ -233,4 +272,4 @@ const deleteproduct = async(req,res)=>{
 }
 
 
-module.exports = { addproduct, getproduct,getproductbycategory,getproductbyid,deleteproduct ,updateproduct}
+module.exports = { addproduct, getproduct,getproductbycategory,getproductbyid,deleteproduct ,updateproduct,getallproduct}
